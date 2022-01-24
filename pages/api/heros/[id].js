@@ -9,64 +9,75 @@ export default async function handler(req, res) {
         method
     } = req;
 
-    if (method === "GET") {
-        try {
-            const hero = await Hero.findOne({ _id: id });
-            if (!hero) {
-                res.status(404).json({
-                    success: false
+    switch (method) {
+        case "GET":
+            try {
+                const hero = await Hero.findOne({ _id: id });
+                if (!hero) {
+                    res.status(404).json({
+                        success: false
+                    });
+                }
+                res.status(200).json({
+                    success: true,
+                    data: hero
+                });
+            } catch (error) {
+                res.status(500).json({
+                    success: false,
+                    message: error
                 });
             }
-            res.status(200).json({
-                success: true,
-                data: hero
-            });
-        } catch (error) {
-            res.status(500).json({
-                success: false,
-                message: error
-            });
-        }
+            break;
 
-    } else if (method === "PUT") {
-        try {
-            const hero = await Hero.findByIdAndUpdate(id, req.body, {
-                new: true,
-                runValidators: true
-            });
-            if (!hero) {
-                res.status(404).json({
-                    success: false
+        case "PUT":
+            try {
+                const hero = await Hero.findByIdAndUpdate(id, req.body, {
+                    new: true,
+                    runValidators: true
+                });
+                if (!hero) {
+                    res.status(404).json({
+                        success: false
+                    });
+                }
+                res.status(200).json({
+                    success: true,
+                    data: hero
+                });
+            } catch (error) {
+                res.status(500).json({
+                    success: false,
+                    message: error
                 });
             }
-            res.status(200).json({
-                success: true,
-                data: hero
-            });
-        } catch (error) {
-            res.status(500).json({
-                success: false,
-                message: error
-            });
-        }
+            break;
 
-    } else if (method === "DELETE") {
-        try {
-            const hero = await Hero.deleteOne({ _id: id });
-            if (!hero) {
-                res.status(404).json({
-                    success: false
+        case "DELETE":
+            try {
+                const hero = await Hero.deleteOne({ _id: id });
+                if (!hero) {
+                    res.status(404).json({
+                        success: false
+                    });
+                }
+                res.status(200).json({
+                    success: true,
+                    data: hero
+                });
+            } catch (error) {
+                res.status(500).json({
+                    success: false,
+                    message: error
                 });
             }
-            res.status(200).json({
-                success: true,
-                data: hero
-            });
-        } catch (error) {
+            break;
+
+        default:
             res.status(500).json({
                 success: false,
-                message: error
+                message: "Something wasn't quite right!"
             });
-        }
+            break;
     }
 }
