@@ -1,6 +1,7 @@
 import { MDBBtn, MDBInput } from "mdb-react-ui-kit";
 import { useRouter } from "next/router";
 import { useState } from "react";
+import { ShowError } from "../../../components/ShowError";
 
 const EditHero = ({ hero }) => {
     const { _id, name, realName } = hero;
@@ -8,6 +9,7 @@ const EditHero = ({ hero }) => {
         name,
         realName
     });
+    const [error, setError] = useState("");
     const router = useRouter();
 
     const handleChange = (e) => {
@@ -29,8 +31,12 @@ const EditHero = ({ hero }) => {
                 },
                 body: JSON.stringify(form)
             };
-            await fetch(URL, PARAMS);
-            await router.push("/");
+            const response = await fetch(URL, PARAMS);
+            if (response.ok) {
+                await router.push("/");
+            } else {
+                setError("Something went wrong while updating Hero...");
+            }
         } catch (error) {
             console.error(error);
         }
@@ -59,6 +65,7 @@ const EditHero = ({ hero }) => {
                 />
                 <MDBBtn>Update Hero</MDBBtn>
             </form>
+            <ShowError error={error} />
         </>
     );
 };

@@ -1,12 +1,14 @@
 import { MDBBtn, MDBInput } from "mdb-react-ui-kit";
 import { useRouter } from "next/router";
 import { useState } from "react";
+import { ShowError } from "../../components/ShowError";
 
 const AddNewHero = () => {
     const [form, setForm] = useState({
         name: "",
         realName: ""
     });
+    const [error, setError] = useState("");
     const router = useRouter();
 
     const handleChange = (e) => {
@@ -28,8 +30,12 @@ const AddNewHero = () => {
                 },
                 body: JSON.stringify(form)
             };
-            await fetch(URL, PARAMS);
-            await router.push("/");
+            const response = await fetch(URL, PARAMS);
+            if (response.ok) {
+                await router.push("/");
+            } else {
+                setError("Something went wrong while deleting Hero..");
+            }
         } catch (error) {
             console.error(error);
         }
@@ -56,6 +62,7 @@ const AddNewHero = () => {
                 />
                 <MDBBtn>Add new Hero</MDBBtn>
             </form>
+            <ShowError error={error} />
         </>
     );
 };

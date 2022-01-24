@@ -8,12 +8,13 @@ import {
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useState } from "react";
+import { ShowError } from "./ShowError";
 
 export const Card = ({ id, title, description }) => {
   const HERO_URL = `/hero/${id}`;
   const router = useRouter();
 
-  const [errors, setErrors] = useState("");
+  const [error, setError] = useState("");
 
   const handleDelete = async () => {
     try {
@@ -24,7 +25,7 @@ export const Card = ({ id, title, description }) => {
       if (response.ok) {
         await router.push("/");
       } else {
-        setErrors("Something went wrong while deleting Hero..");
+        setError("Something went wrong while deleting Hero..");
       }
     } catch (error) {
       console.error(error);
@@ -51,7 +52,7 @@ export const Card = ({ id, title, description }) => {
             Delete Hero
           </MDBBtn>
         )}
-        {errors && <label className="text-danger">{errors}</label>}
+        <ShowError error={error} />
       </MDBCardBody>
     </MDBCard>
   );
